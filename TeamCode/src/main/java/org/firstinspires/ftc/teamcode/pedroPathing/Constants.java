@@ -40,10 +40,10 @@ public class Constants {
 
 
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .rightFrontMotorName("MotorFrenteDireita")
-            .rightRearMotorName("MotorTrasDireita")
-            .leftRearMotorName("MotorTrasEsquerda")
-            .leftFrontMotorName("MotorFrenteEsquerda")
+            .rightFrontMotorName("FrenteDireita")
+            .rightRearMotorName("TrasDireita")
+            .leftRearMotorName("TrasEsquerda")
+            .leftFrontMotorName("FrenteEsquerda")
             .leftFrontMotorDirection(DcMotor.Direction.REVERSE)
             .leftRearMotorDirection(DcMotor.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotor.Direction.FORWARD)
