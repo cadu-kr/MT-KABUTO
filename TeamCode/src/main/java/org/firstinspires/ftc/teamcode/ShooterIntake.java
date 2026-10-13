@@ -42,7 +42,7 @@ public class ShooterIntake extends LinearOpMode {
                 espera.reset();
             }
             if (rdespera){
-                if (espera.seconds() < .5){
+                if (espera.seconds() < 1){
                     plintake = -1;
                 }
                 else {
@@ -63,7 +63,7 @@ public class ShooterIntake extends LinearOpMode {
                 maisespera.reset();
             }
             if (rdmaisespeera){
-                if (maisespera.seconds() > .3){
+                if (maisespera.seconds() > .4){
                     compres.setPosition(1);
                     rdmaisespeera = false;
                 }
