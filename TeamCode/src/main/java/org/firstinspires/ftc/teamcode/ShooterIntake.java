@@ -30,7 +30,6 @@ public class ShooterIntake{
         intake = hardwareMap.get(DcMotor.class, "intake");
         compres = hardwareMap.get(Servo.class, "compressao");
 
-        compres.scaleRange(0, 270);
         compres.setPosition(1);
     }
 

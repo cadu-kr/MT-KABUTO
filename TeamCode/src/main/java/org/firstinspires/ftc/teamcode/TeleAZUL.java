@@ -31,6 +31,12 @@ public class TeleAZUL extends LinearOpMode {
             intake.telemetry(telemetry);
             shooter.telemetry(telemetry);
 
+            double voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
+            double percentage = (voltage - 10.5) / (13.5 - 10.5) * 100.0;
+            percentage = Math.max(0, Math.min(100, percentage));
+
+            telemetry.addData("Bateria do Robô: ", "%.1f%% (%.2fV)", percentage, voltage);
+
             telemetry.update();
         }
     }
