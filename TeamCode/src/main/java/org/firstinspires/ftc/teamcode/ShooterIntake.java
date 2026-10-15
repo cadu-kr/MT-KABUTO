@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "TT-Intake")
-public class ShooterIntake extends LinearOpMode {
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+public class ShooterIntake{
 
     ColorSensor sensor;
     DcMotor intake;
@@ -21,18 +22,20 @@ public class ShooterIntake extends LinearOpMode {
     boolean rdmaisespeera = false;
     boolean ap = false;
     int ad = 1;
+    String on = "ON";
+    String off = "OFF";
 
-    @Override
-    public void runOpMode(){
+    public void inicio(HardwareMap hardwareMap) {
         sensor = hardwareMap.get(ColorSensor.class, "cor");
         intake = hardwareMap.get(DcMotor.class, "intake");
         compres = hardwareMap.get(Servo.class, "compressao");
 
         compres.scaleRange(0, 270);
         compres.setPosition(1);
+    }
 
-        waitForStart();
-        while (opModeIsActive()){
+    public void rodar(Gamepad gamepad1){
+
             int blue = sensor.blue();
             int red = sensor.red();
             double plintake = 0;
@@ -42,7 +45,7 @@ public class ShooterIntake extends LinearOpMode {
                 espera.reset();
             }
             if (rdespera){
-                if (espera.seconds() < 1){
+                if (espera.seconds() < .3){
                     plintake = -1;
                 }
                 else {
@@ -74,14 +77,13 @@ public class ShooterIntake extends LinearOpMode {
             }
             ap = gamepad1.a;
 
-            double voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
-            double percentage = (voltage - 10.5) / (13.5 - 10.5) * 100.0;
-            percentage = Math.max(0, Math.min(100, percentage));
-
-            telemetry.addData("Bateria do Robô: ", "%.1f%% (%.2fV)", percentage, voltage);
-
-            telemetry.addData("Intake: ", plintake);
-            telemetry.update();
+    }
+    public void telemetry(Telemetry telemetry){
+        if (ad %2 == 0){
+            telemetry.addData("Intake: ", on);
+        }
+        else {
+            telemetry.addData("Intake: ", off);
         }
     }
 }
