@@ -14,7 +14,7 @@ public class ttTorreta extends LinearOpMode {
 
     DcMotor torreta;
     Limelight3A limelight;
-    double kp = .02;
+    double limitadorGiro = .02;
 
 
     @Override
@@ -30,17 +30,17 @@ public class ttTorreta extends LinearOpMode {
         while (opModeIsActive()) {
             LLResult result = limelight.getLatestResult();
             if (result != null && result.isValid()) {
-                double tx = result.getTx();
-                double pw = Range.clip(tx * kp, -.5, .5);
+                double eixoTx = result.getTx();
+                double power = Range.clip(eixoTx * limitadorGiro, -.5, .5);
 
-                 if (Math.abs(tx) > 1) {
-                   pw = 0;
+                 if (Math.abs(eixoTx) > 1) {
+                   power = 0;
                  }
-                 torreta.setPower(pw);
+                 torreta.setPower(power);
             }
             else {
-                double pwgiro = gamepad1.left_stick_x;
-                torreta.setPower(pwgiro);
+                double powerGiro = gamepad1.left_stick_x;
+                torreta.setPower(powerGiro);
             }
         }
         limelight.stop();

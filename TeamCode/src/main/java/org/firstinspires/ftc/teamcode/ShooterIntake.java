@@ -13,24 +13,22 @@ public class ShooterIntake{
 
     ColorSensor sensor;
     DcMotor intake;
-    Servo compres;
+    Servo compressao;
 
     ElapsedTime espera = new ElapsedTime();
-    ElapsedTime maisespera = new ElapsedTime();
+    ElapsedTime maisEspera = new ElapsedTime();
 
-    boolean rdespera = false;
-    boolean rdmaisespeera = false;
+    boolean rodaEspera = false;
+    boolean rodaMaisEspera = false;
     boolean ap = false;
     int ad = 1;
-    String on = "ON";
-    String off = "OFF";
 
     public void inicio(HardwareMap hardwareMap) {
         sensor = hardwareMap.get(ColorSensor.class, "cor");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        compres = hardwareMap.get(Servo.class, "compressao");
+        compressao = hardwareMap.get(Servo.class, "compressao");
 
-        compres.setPosition(1);
+        compressao.setPosition(1);
     }
 
     public void rodar(Gamepad gamepad1){
@@ -40,15 +38,15 @@ public class ShooterIntake{
             double plintake = 0;
 
             if (red > 100){
-                rdespera = true;
+                rodaEspera = true;
                 espera.reset();
             }
-            if (rdespera){
+            if (rodaEspera){
                 if (espera.seconds() < .3){
                     plintake = -1;
                 }
                 else {
-                    rdespera = false;
+                    rodaEspera = false;
                 }
             }else {
                 if (ad % 2 == 0){
@@ -60,14 +58,14 @@ public class ShooterIntake{
             intake.setPower(plintake);
 
             if (blue > 100){
-                compres.setPosition(0);
-                rdmaisespeera = true;
-                maisespera.reset();
+                compressao.setPosition(0);
+                rodaMaisEspera = true;
+                maisEspera.reset();
             }
-            if (rdmaisespeera){
-                if (maisespera.seconds() > .4){
-                    compres.setPosition(1);
-                    rdmaisespeera = false;
+            if (rodaMaisEspera){
+                if (maisEspera.seconds() > .4){
+                    compressao.setPosition(1);
+                    rodaMaisEspera = false;
                 }
             }
 
@@ -79,10 +77,10 @@ public class ShooterIntake{
     }
     public void telemetry(Telemetry telemetry){
         if (ad %2 == 0){
-            telemetry.addData("Intake: ", on);
+            telemetry.addData("Intake: ", "ON");
         }
         else {
-            telemetry.addData("Intake: ", off);
+            telemetry.addData("Intake: ", "OFF");
         }
     }
 }

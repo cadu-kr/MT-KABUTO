@@ -12,24 +12,24 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Rodas{
 
-    private DcMotor rodaFD, rodaFE, rodaTD, rodaTE;
+    private DcMotor rodaFrenteDireita, rodaFrenteEsquerda, rodaTrasDireita, rodaTrasEsquerda;
     Limelight3A limelight;
     final double crgiro = .03;
     final double giroMinimo = .08;
     public void inicio(HardwareMap hardwareMap) {
 
-        rodaFD = hardwareMap.get(DcMotor.class, "MotorFrenteDireita");
-        rodaFE = hardwareMap.get(DcMotor.class, "MotorFrenteEsquerda");
-        rodaTD = hardwareMap.get(DcMotor.class, "MotorTrasDireita");
-        rodaTE = hardwareMap.get(DcMotor.class, "MotorTrasEsquerda");
+        rodaFrenteDireita = hardwareMap.get(DcMotor.class, "F-D");
+        rodaFrenteEsquerda = hardwareMap.get(DcMotor.class, "F-E");
+        rodaTrasDireita = hardwareMap.get(DcMotor.class, "T-D");
+        rodaTrasEsquerda = hardwareMap.get(DcMotor.class, "T-E");
 
-        rodaFD.setDirection(DcMotorSimple.Direction.REVERSE);
-        rodaTD.setDirection(DcMotorSimple.Direction.REVERSE);
+        rodaFrenteDireita.setDirection(DcMotorSimple.Direction.REVERSE);
+        rodaTrasDireita.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rodaFD.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rodaFE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rodaTD.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rodaTE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rodaFrenteDireita.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rodaFrenteEsquerda.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rodaTrasDireita.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rodaTrasEsquerda.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.setPollRateHz(60);
@@ -46,9 +46,9 @@ public class Rodas{
             LLResult resul = limelight.getLatestResult();
 
             if (resul != null && resul.isValid()) {
-                double errgiro = resul.getTx();
+                double erroGiro = resul.getTx();
 
-                if (Math.abs(errgiro) > giroMinimo) {
+                if (Math.abs(erroGiro) > giroMinimo) {
                     comandoGiro = Math.signum(comandoGiro) * giroMinimo;
                 }
             }
@@ -61,23 +61,23 @@ public class Rodas{
             comandoGiro = gamepad1.right_stick_x;
         }
 
-        double pFE = comandoFrente + comandoLateral + comandoGiro;
-        double pFD = comandoFrente - comandoLateral - comandoGiro;
-        double pTE = comandoFrente - comandoLateral + comandoGiro;
-        double pTD = comandoFrente + comandoLateral - comandoGiro;
+        double potenciaFrenteEsquerda = comandoFrente + comandoLateral + comandoGiro;
+        double potenciaFrenteDireita = comandoFrente - comandoLateral - comandoGiro;
+        double potenciaTrasEsquerda = comandoFrente - comandoLateral + comandoGiro;
+        double potenciaTrasDireita = comandoFrente + comandoLateral - comandoGiro;
 
         double max = Math.max(1.0, Math.max(
-            Math.max(Math.abs(pFE), Math.abs(pFD)),
-            Math.max(Math.abs(pTE), Math.abs(pTD))));
+            Math.max(Math.abs(potenciaFrenteEsquerda), Math.abs(potenciaFrenteDireita)),
+            Math.max(Math.abs(potenciaTrasEsquerda), Math.abs(potenciaTrasDireita))));
 
-        pFE /= max;
-        pFD /= max;
-        pTE /= max;
-        pTD /= max;
+        potenciaFrenteEsquerda /= max;
+        potenciaTrasDireita /= max;
+        potenciaTrasEsquerda /= max;
+        potenciaTrasDireita /= max;
 
-        rodaFD.setPower(pFD);
-        rodaFE.setPower(pFE);
-        rodaTE.setPower(pTE);
-        rodaTD.setPower(pTD);
+        rodaFrenteDireita.setPower(potenciaFrenteDireita);
+        rodaFrenteEsquerda.setPower(potenciaFrenteEsquerda);
+        rodaTrasEsquerda.setPower(potenciaTrasEsquerda);
+        rodaTrasDireita.setPower(potenciaTrasDireita);
     }
 }
