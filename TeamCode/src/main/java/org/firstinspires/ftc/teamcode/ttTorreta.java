@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "TT-Torreta")
+@TeleOp(name = "TT-Torreta", group = "TESTE")
 public class ttTorreta extends LinearOpMode {
 
     DcMotor torreta;

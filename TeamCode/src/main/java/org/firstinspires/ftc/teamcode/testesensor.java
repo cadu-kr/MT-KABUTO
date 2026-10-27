@@ -4,38 +4,40 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-@TeleOp(name = "TT-Color")
-public class TTcolor extends LinearOpMode {
+@TeleOp(name = "TT-Sensor", group = "TESTE")
+public class testesensor extends LinearOpMode {
 
     ColorSensor sensor;
+    boolean maiorRed = false;
+    boolean maiorBlue = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        sensor = hardwareMap.get(ColorSensor.class, "color");
+        sensor = hardwareMap.get(ColorSensor.class, "sensor-color");
 
         waitForStart();
         while (opModeIsActive()) {
             int red = sensor.red();
             int blue = sensor.blue();
 
-
-            //Ainda preciso testar melhor o sensor para colocar os valores certos no if
-            /*if (red < 100) {
-                red = 10;
+            /*if (blue < 250) {
+                blue = 0;
             }
-            else if (red > 100) {
-                red = 1000;
+            else if (red < 350) {
+                red = 0;
             }
 
-            if (blue < 100) {
-                blue = 10;
+            if (blue > red) {
+                maiorBlue = true;
             }
-            else if (blue > 100) {
-                blue = 1000;
+            else if (red > blue) {
+                maiorRed = true;
             }*/
 
             telemetry.addData("BLUE: ", blue);
             telemetry.addData("RED: ", red);
+            telemetry.update();
+
         }
     }
 }
