@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "TT-Compressao", group = "TESTE")
 public class ttCompressao extends OpMode {
     Servo servo;
-    boolean addCompressao;
-    boolean removeCompressao;
+    boolean addCompressao = false;
+    boolean removeCompressao = false;
     double compressao = 0;
 
     public void compressaoServo() {

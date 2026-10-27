@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -19,10 +20,9 @@ public class ttShooter extends OpMode {
     Servo compressaoShooter;
     ColorSensor sensor;
     Limelight3A limelight;
-    double potencia = 5.5;
+    double potencia = .55;
     boolean addPotencia = false;
     boolean removePotencia = false;
-    double distanciaTag = -1;
 
 
     public void colorSensor() {
@@ -30,6 +30,7 @@ public class ttShooter extends OpMode {
     }
 
     public void distanciaLimelight() {
+        double distanciaTag = -1;
         LLResult result = limelight.getLatestResult();
 
         if (result != null && result.isValid()) {
@@ -41,6 +42,7 @@ public class ttShooter extends OpMode {
                 double y = p.getPosition().y;
                 double z = p.getPosition().z;
                 distanciaTag = Math.sqrt(x*x + y*y + z*z);
+                telemetry.addData("Tag visivel", distanciaTag != -1);
             }
         }
 
@@ -63,6 +65,7 @@ public class ttShooter extends OpMode {
         else if (gamepad1.dpad_down && !removePotencia) {
             potencia-= .05;
         }
+        potencia = Math.max(0, Math.min(1, potencia));
         addPotencia = gamepad1.dpad_up;
         removePotencia = gamepad1.dpad_down;
 
@@ -81,9 +84,9 @@ public class ttShooter extends OpMode {
     @Override
     public void init() {
         shooter = hardwareMap.get(DcMotor.class, "shooter");
+        shooter.setDirection(DcMotorSimple.Direction.FORWARD);
 
         compressaoShooter = hardwareMap.get(Servo.class, "compressao");
-        compressaoShooter.scaleRange(0, 270);
         compressaoShooter.setPosition(.6);
 
         sensor = hardwareMap.get(ColorSensor.class, "sensor");
@@ -100,5 +103,6 @@ public class ttShooter extends OpMode {
         compressao();
         potencia();
         lancamento();
+        telemetry.update();
     }
 }
