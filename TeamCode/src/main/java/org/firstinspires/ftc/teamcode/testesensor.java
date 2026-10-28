@@ -8,8 +8,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 public class testesensor extends LinearOpMode {
 
     ColorSensor sensor;
-    boolean maiorRed = false;
-    boolean maiorBlue = false;
+
+    static final int limiteAzul = 215;
+    static final int limiteVermelho = 280;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -20,24 +21,27 @@ public class testesensor extends LinearOpMode {
             int red = sensor.red();
             int blue = sensor.blue();
 
-            /*if (blue < 250) {
+            if (blue < limiteAzul) {
                 blue = 0;
             }
-            else if (red < 350) {
+            if (red < limiteVermelho) {
                 red = 0;
             }
 
-            if (blue > red) {
-                maiorBlue = true;
+            boolean maiorBlue = blue > red;
+            boolean maiorRed = red > blue;
+
+            if (maiorBlue) {
+                telemetry.addData("Detectado", "Nectar");
+            } else if (maiorRed) {
+                telemetry.addData("Detectado", "Polen");
+            } else {
+                telemetry.addData("Detectado", "Nada");
             }
-            else if (red > blue) {
-                maiorRed = true;
-            }*/
 
-            telemetry.addData("BLUE: ", blue);
-            telemetry.addData("RED: ", red);
+            telemetry.addData("BLUE", blue);
+            telemetry.addData("RED", red);
             telemetry.update();
-
         }
     }
 }

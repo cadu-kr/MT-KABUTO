@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
@@ -20,17 +21,44 @@ public class ttShooter extends OpMode {
     Servo compressaoShooter;
     ColorSensor sensor;
     Limelight3A limelight;
+    ElapsedTime espera = new ElapsedTime();
+    //--------------------------------
     double potencia = .55;
     boolean addPotencia = false;
     boolean removePotencia = false;
+    //---------------------------------
+    static final int limiteAzul = 215;
+    static final int limiteVermelho = 280;
+    boolean maiorBlue = false;
+    boolean maiorRed = false;
 
 
     public void colorSensor() {
+        int red = sensor.red();
+        int blue = sensor.blue();
 
+        if (blue < limiteAzul) {
+            blue = 0;
+        }
+        if (red < limiteVermelho) {
+            red = 0;
+        }
+
+        maiorBlue = blue > red;
+        maiorRed = red > blue;
+
+        if (maiorBlue) {
+            telemetry.addData("Detectado", "Nectar");
+        } else if (maiorRed) {
+            telemetry.addData("Detectado", "Polen");
+        } else {
+            telemetry.addData("Detectado", "Nada");
+        }
     }
 
     public void distanciaLimelight() {
         double distanciaTag = -1;
+        boolean tagVisivel = false;
         LLResult result = limelight.getLatestResult();
 
         if (result != null && result.isValid()) {
@@ -42,19 +70,21 @@ public class ttShooter extends OpMode {
                 double y = p.getPosition().y;
                 double z = p.getPosition().z;
                 distanciaTag = Math.sqrt(x*x + y*y + z*z);
-                telemetry.addData("Tag visivel", distanciaTag != -1);
+                tagVisivel = true;
             }
         }
 
-        telemetry.addData("Distancia: ", distanciaTag);
+        telemetry.addData("Tag visivel", tagVisivel);
+        telemetry.addData("Distancia", distanciaTag);
     }
 
     public void compressao() {
-        if (gamepad1.left_bumper) {
+        if (maiorBlue) {
+            espera.reset();
             compressaoShooter.setPosition(0);
-        }
-        else if (gamepad1.right_bumper) {
-            compressaoShooter.setPosition(.6);
+            if (espera.milliseconds() >= 400) {
+                compressaoShooter.setPosition(.6);
+            }
         }
     }
 
@@ -69,7 +99,7 @@ public class ttShooter extends OpMode {
         addPotencia = gamepad1.dpad_up;
         removePotencia = gamepad1.dpad_down;
 
-        telemetry.addData("Potencia: ", potencia);
+        telemetry.addData("Potencia", potencia);
     }
 
     public void lancamento() {
@@ -89,7 +119,7 @@ public class ttShooter extends OpMode {
         compressaoShooter = hardwareMap.get(Servo.class, "compressao");
         compressaoShooter.setPosition(.6);
 
-        sensor = hardwareMap.get(ColorSensor.class, "sensor");
+        sensor = hardwareMap.get(ColorSensor.class, "sensor-color");
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.setPollRateHz(100);
@@ -99,8 +129,9 @@ public class ttShooter extends OpMode {
 
     @Override
     public void loop() {
-        distanciaLimelight();
+        colorSensor();
         compressao();
+        distanciaLimelight();
         potencia();
         lancamento();
         telemetry.update();
