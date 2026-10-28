@@ -53,6 +53,12 @@ public class ttDistancia extends LinearOpMode {
                     }
                     double potenciaCerta = potencia[melhorPotencia];
                 }
+                telemetry.addData("Tag Visivel", tagVisivel);
+                telemetry.addData("Distancia", distanciaTag);
+            }
+            else {
+                telemetry.addData("Tag Visivel", tagVisivel);
+                telemetry.addData("Distancia", "SEM INFORMACAO");
             }
         }
     }
