@@ -31,6 +31,11 @@ public class ttShooter extends OpMode {
     static final int limiteVermelho = 280;
     boolean maiorBlue = false;
     boolean maiorRed = false;
+    //-----------------------------------
+    double[] distanciasAuto = {10, 20, 30, 40, 50}; //---> Definir as distancias para atirar
+    double[] potenciasAuto = {.55, .6, .7, .8, .9}; //---> Definir as potencias de acordo com as distancias
+    double potenciaCerta;
+    boolean tagVisivel = false;
 
 
     public void colorSensor() {
@@ -58,7 +63,7 @@ public class ttShooter extends OpMode {
 
     public void distanciaLimelight() {
         double distanciaTag = -1;
-        boolean tagVisivel = false;
+        tagVisivel = false;
         LLResult result = limelight.getLatestResult();
 
         if (result != null && result.isValid()) {
@@ -73,9 +78,20 @@ public class ttShooter extends OpMode {
                 tagVisivel = true;
             }
         }
+        if (tagVisivel) {
+            int melhorPotencia = 0;
+            double menorDiferenca = Double.MAX_VALUE;
 
-        telemetry.addData("Tag visivel", tagVisivel);
-        telemetry.addData("Distancia", distanciaTag);
+            for (int i=0; i < distanciasAuto.length; i++) {
+                double diferenca = Math.abs(distanciasAuto[i] - distanciaTag);
+
+                if (diferenca < menorDiferenca) {
+                    menorDiferenca = diferenca;
+                    melhorPotencia = i;
+                }
+                potenciaCerta = potenciasAuto[melhorPotencia];
+            }
+        }
     }
 
     public void compressao() {
@@ -103,11 +119,16 @@ public class ttShooter extends OpMode {
     }
 
     public void lancamento() {
-        if (gamepad1.right_trigger >= .2) {
-            shooter.setPower(potencia);
+        if (tagVisivel && gamepad1.left_trigger >= .2) {
+            shooter.setPower(potenciaCerta);
         }
         else {
-            shooter.setPower(0);
+            if (gamepad1.right_trigger >= .2) {
+                shooter.setPower(potencia);
+            }
+            else {
+                shooter.setPower(0);
+            }
         }
     }
 
@@ -131,7 +152,7 @@ public class ttShooter extends OpMode {
     public void loop() {
         colorSensor();
         compressao();
-        distanciaLimelight();
+        //distanciaLimelight();
         potencia();
         lancamento();
         telemetry.update();

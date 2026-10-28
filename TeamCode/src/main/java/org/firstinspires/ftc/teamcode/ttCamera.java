@@ -25,6 +25,7 @@ public class ttCamera extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             LLResult result = limelight.getLatestResult();
+            boolean tagVisivel = false;
 
             if (result != null && result.isValid()) {
                 List<LLResultTypes.FiducialResult> tags = result.getFiducialResults();
@@ -35,10 +36,12 @@ public class ttCamera extends LinearOpMode {
                     double y = p.getPosition().y;
                     double z = p.getPosition().z;
                     distanciaTag = Math.sqrt(x*x + y*y + z*z);
+                    tagVisivel = true;
                 }
             }
 
             telemetry.addData("Distancia: ", distanciaTag);
+            telemetry.addData("Tag Visivel", tagVisivel);
             telemetry.update();
         }
     }
