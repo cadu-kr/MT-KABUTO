@@ -29,7 +29,7 @@ public class ttRodinha extends OpMode {
             if (!ativo) {
                 ativo = true;
                 temp.reset();
-            } else if (temp.seconds() >= .5) {
+            } else if (temp.seconds() >= .3) {
                 ativo = false;
                 travado = true;
             }
@@ -38,7 +38,7 @@ public class ttRodinha extends OpMode {
         double fator;
 
         if (ativo) {
-            fator = .5;
+            fator = .7;
         } else {
             fator = 1;
         }
